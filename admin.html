@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Admin Panel</title>
+
+<style>
+
+body{
+background:#021b1b;
+color:white;
+font-family:sans-serif;
+text-align:center;
+}
+
+.card{
+background:#064e3b;
+margin:20px;
+padding:20px;
+border-radius:10px;
+}
+
+button{
+background:#22c55e;
+border:none;
+padding:10px;
+margin:6px;
+border-radius:6px;
+color:white;
+}
+
+input{
+padding:8px;
+border-radius:6px;
+border:none;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<h1>Admin Panel</h1>
+
+<div class="card">
+
+<h3>Search User</h3>
+
+<input id="uid" placeholder="User ID">
+
+<button onclick="loadUser()">Search</button>
+
+</div>
+
+<div class="card">
+
+<h3>User Info</h3>
+
+<p>User ID: <span id="id"></span></p>
+
+<p>Balance: $<span id="balance">0</span></p>
+
+<p>Referrals: <span id="ref">0</span></p>
+
+</div>
+
+<div class="card">
+
+<h3>Edit Balance</h3>
+
+<input id="amount" placeholder="Add Balance">
+
+<button onclick="addBalance()">Add Balance</button>
+
+</div>
+
+<div class="card">
+
+<h3>Withdraw Requests</h3>
+
+<p>No withdraw system connected yet</p>
+
+</div>
+
+<script>
+
+const API="https://crypto-backend-4g2j.onrender.com";
+
+let currentUser="";
+
+function loadUser(){
+
+let id=document.getElementById("uid").value;
+
+fetch(API+"/user/"+id)
+
+.then(r=>r.json())
+
+.then(data=>{
+
+currentUser=id;
+
+document.getElementById("id").innerText=id;
+
+document.getElementById("balance").innerText=data.balance || 0;
+
+document.getElementById("ref").innerText=data.referrals || 0;
+
+});
+
+}
+
+function addBalance(){
+
+let amount=parseFloat(document.getElementById("amount").value);
+
+fetch(API+"/claim",{
+
+method:"POST",
+
+headers:{"Content-Type":"application/json"},
+
+body:JSON.stringify({userId:currentUser})
+
+})
+
+.then(r=>r.json())
+
+.then(data=>{
+
+alert("Balance updated");
+
+document.getElementById("balance").innerText=data.balance;
+
+});
+
+}
+
+</script>
+
+</body>
+</html>
